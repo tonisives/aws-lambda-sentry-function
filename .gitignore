@@ -1,0 +1,23 @@
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+*.d.ts
+*.js
+node_modules
+cdktf.out
+.gen
+
+!lambda-hello-world/dist/*
+!lambda-hello-name/dist/*
+
+node_modules
+
+dist
+cdktf/.DS_Store
+yarn.lock
+.DS_Store

@@ -1,0 +1,14 @@
+{
+  "name": "backend-tf",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "apply": "yarn workspace terraform cdktf apply --auto-approve",
+    "plan": "yarn workspace terraform cdktf plan --auto-approve",
+    "destroy": "yarn workspace terraform cdktf destroy --auto-approve",
+    "upgrade-all": "cd packages/terraform/ && yarn-upgrade-all && cd ../.. && cd packages/store/ && yarn-upgrade-all"
+  }
+}
