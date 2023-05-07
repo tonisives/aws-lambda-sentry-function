@@ -1,3 +1,5 @@
+## TODO: use type: module (https://github.com/tonisives/docs-ai/commit/11ee0ea8ea5620769123e4f94493e0262e281d6d)
+
 ## Setup
 
 `yarn`
