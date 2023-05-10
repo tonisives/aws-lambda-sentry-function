@@ -46,8 +46,8 @@ class MyStack extends TerraformStack {
 
     let lambdas = [
       this.addLambda(bucket, api, {
-        name: `${stack}-store`,
-        path: `../../store/dist`,
+        name: `${stack}-function`,
+        path: `../../function/dist`,
         handler: "index.handler",
         runtime: "nodejs18.x",
         version: "v0.0.1"
