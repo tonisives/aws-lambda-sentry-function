@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "main.js",
   "types": "main.ts",
+  "type": "module",
   "private": true,
   "scripts": {
     "get": "cdktf get",

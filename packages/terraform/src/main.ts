@@ -1,4 +1,3 @@
-import * as path from "path";
 import { Construct } from "constructs";
 import { App, TerraformStack, TerraformOutput, Lazy } from "cdktf";
 // import * as aws from '@cdktf/provider-aws';
@@ -90,7 +89,7 @@ class MyStack extends TerraformStack {
     const nameWithoutStack = config.name.replace(`${STACK_NAME}-`, "")
     const nodeJsFunction = new NodejsFunction(this, `${config.name}-nodejs`, {
       handler: 'index.foo',
-      path: path.join(__dirname, '..', '..', nameWithoutStack)
+      path: `../${nameWithoutStack}`
     })
 
     // this changes if code is changed.
