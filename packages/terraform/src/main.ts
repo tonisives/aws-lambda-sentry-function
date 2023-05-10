@@ -1,11 +1,11 @@
 import * as path from "path";
 import { Construct } from "constructs";
-import { App, TerraformStack, TerraformOutput } from "cdktf";
+import { App, TerraformStack, TerraformOutput, Lazy } from "cdktf";
 // import * as aws from '@cdktf/provider-aws';
 
 import { NodejsFunction } from './lib/nodejs-lambda'
 import { addVars } from "./modules/vars";
-import { LambdaFunctionConfig, lambdaRolePolicy, REGION, STACK_NAME } from "./config";
+import { LambdaFunctionConfig, lambdaRolePolicy, REGION, STACK_NAME, LAMBDA_TIMEOUT } from "./config";
 import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
 import { S3Bucket } from "@cdktf/provider-aws/lib/s3-bucket";
 import { ApiGatewayRestApi } from "@cdktf/provider-aws/lib/api-gateway-rest-api";
@@ -19,6 +19,8 @@ import { ApiGatewayIntegration } from "@cdktf/provider-aws/lib/api-gateway-integ
 import { ApiGatewayResource } from "@cdktf/provider-aws/lib/api-gateway-resource";
 import { ApiGatewayMethod } from "@cdktf/provider-aws/lib/api-gateway-method";
 import { S3Object } from "@cdktf/provider-aws/lib/s3-object";
+import { env } from "./env.example.js";
+import { CloudwatchLogGroup } from "@cdktf/provider-aws/lib/cloudwatch-log-group/index.js";
 
 class MyStack extends TerraformStack {
   constructor(scope: Construct, stack: string) {
@@ -55,7 +57,18 @@ class MyStack extends TerraformStack {
 
     const deployment = new ApiGatewayDeployment(this, `${stack}-deployment`, {
       restApiId: api.id,
-      dependsOn: lambdas.flatMap(it => it.integrations)
+      dependsOn: lambdas.flatMap(it => it.integrations),
+      lifecycle: {
+        createBeforeDestroy: true,
+      },
+      triggers: {
+        // Trigger redeployment when lambdas added/removed
+        redeployment: Lazy.stringValue({
+          produce: () => {
+            return lambdas.length.toString();
+          },
+        }),
+      }
     })
 
     const stage = new ApiGatewayStage(this, `${stack}-stage`, {
@@ -96,6 +109,11 @@ class MyStack extends TerraformStack {
       assumeRolePolicy: JSON.stringify(lambdaRolePolicy)
     })
 
+    new CloudwatchLogGroup(this, `${config.name}-log-group`, {
+      name: `/aws/lambda/${config.name}`,
+      retentionInDays: 7
+    })
+
     // Add execution role for lambda to write to CloudWatch logs
     new IamRolePolicyAttachment(this, `${config.name}-policy`, {
       policyArn: 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
@@ -110,9 +128,10 @@ class MyStack extends TerraformStack {
       handler: config.handler,
       runtime: config.runtime,
       role: role.arn,
+      timeout: LAMBDA_TIMEOUT,
       environment: {
         variables: {
-          "MONGO_URL": process.env.MONGO_URL!
+          ...env
         }
       }
     });

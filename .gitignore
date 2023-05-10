@@ -21,3 +21,5 @@ dist
 cdktf/.DS_Store
 yarn.lock
 .DS_Store
+env.ts
+.yarn
