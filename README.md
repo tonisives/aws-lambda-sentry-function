@@ -2,17 +2,17 @@
 
 Invoke Sentry via this lambda to reduce your bundle size.
 
-Deploy this lambda and then call it with
+Deploy this lambda and then call it with a body like this
 
 ```
 {
   "dsn": "https://<your sentry dsn>",
   "event": {
     "message": "Hello, world!",
-    "level": "warning"
+    "level": "warning",
     "tags": {
       "foo": "bar"
-    }
+    },
     "errors": [
       {
         "type": "unknown_error",
@@ -20,7 +20,6 @@ Deploy this lambda and then call it with
         "details": "Failed to read attachment"
       }
     ]
-
   }
 }
 ```

@@ -11,6 +11,7 @@
     "@types/aws-lambda": "^8.10.115"
   },
   "dependencies": {
+    "@sentry/node": "^7.51.2",
     "typescript": "^5.0.4"
   }
 }

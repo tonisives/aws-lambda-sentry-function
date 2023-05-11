@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "backend: run function",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/function",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "run",
+        "run",
+      ]
+    },
+    {
+      "name": "backend: run microsentry",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/packages/micro-sentry",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "run",
+        "run",
+      ]
+    }
+  ]
+}
