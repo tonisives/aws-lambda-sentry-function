@@ -1,8 +1,5 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import Sentry, { SeverityLevel, captureException } from "@sentry/node";
 import { SENTRY_DSN } from "./env.js";
 import { MicroSentry } from "./microSentry.js";
-
 
 export const run = async (
 

@@ -10,7 +10,7 @@
     "build": "tsc",
     "synth": "cdktf synth",
     "plan": "cdktf plan",
-    "apply": "cdktf apply",
+    "apply": "cdktf apply --auto-approve",
     "destroy": "cdktf destroy",
     "compile": "tsc --pretty",
     "watch": "tsc -w",

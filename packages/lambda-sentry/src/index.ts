@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import Sentry, { SeverityLevel, captureException } from "@sentry/node";
+import Sentry, { SeverityLevel } from "@sentry/node";
 
 export interface Input {
   dsn: string;
@@ -23,7 +23,6 @@ export interface Error {
   details: string;
 }
 
-
 export const handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
@@ -39,6 +38,8 @@ export const handler = async (
   }
 
   let response = Sentry.captureMessage(body.event.message, captureContext)
+
+  await Sentry.close(2000)
 
   return {
     statusCode: 200,

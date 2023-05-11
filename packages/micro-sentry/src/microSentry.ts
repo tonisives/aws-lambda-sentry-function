@@ -24,6 +24,10 @@ export class MicroSentry {
     globalThis.XMLHttpRequest = XMLHttpRequest
   }
 
+  close = () => {
+    // TODO: wait a few seconds    
+  }
+
   static init(dsn: string) {
     if (!MicroSentry.instance) {
       MicroSentry.instance = new MicroSentry(dsn);

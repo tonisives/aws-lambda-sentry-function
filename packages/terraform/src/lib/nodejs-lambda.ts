@@ -1,6 +1,6 @@
 import { buildSync } from 'esbuild';
 import { Construct } from 'constructs';
-import { Resource, TerraformAsset, AssetType } from 'cdktf';
+import { TerraformAsset, AssetType } from 'cdktf';
 import * as path from 'path';
 
 export interface NodejsFunctionProps {
@@ -12,9 +12,10 @@ const bundle = (workingDirectory: string) => {
   buildSync({
     entryPoints: ['src/index.ts'],
     platform: 'node',
-    target: 'es2018',
+    target: 'es2020',
     bundle: true,
     format: 'cjs',
+    minify: true,
     sourcemap: 'external',
     outdir: 'dist',
     absWorkingDir: workingDirectory
@@ -23,7 +24,7 @@ const bundle = (workingDirectory: string) => {
   return path.join(workingDirectory, 'dist')
 }
 
-export class NodejsFunction extends Resource {
+export class NodejsFunction extends Construct {
   public readonly handler: string;
   public readonly asset: TerraformAsset;
 

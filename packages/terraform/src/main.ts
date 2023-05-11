@@ -1,23 +1,22 @@
 import { Construct } from "constructs";
 import { App, TerraformStack, TerraformOutput, Lazy } from "cdktf";
-// import * as aws from '@cdktf/provider-aws';
 
-import { NodejsFunction } from './lib/nodejs-lambda'
-import { addVars } from "./modules/vars";
-import { LambdaFunctionConfig, lambdaRolePolicy, REGION, STACK_NAME, LAMBDA_TIMEOUT } from "./config";
-import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
-import { S3Bucket } from "@cdktf/provider-aws/lib/s3-bucket";
-import { ApiGatewayRestApi } from "@cdktf/provider-aws/lib/api-gateway-rest-api";
-import { ApiGatewayDeployment } from "@cdktf/provider-aws/lib/api-gateway-deployment";
-import { ApiGatewayStage } from "@cdktf/provider-aws/lib/api-gateway-stage";
-import { IamRole } from "@cdktf/provider-aws/lib/iam-role";
-import { IamRolePolicyAttachment } from "@cdktf/provider-aws/lib/iam-role-policy-attachment";
-import { LambdaFunction } from "@cdktf/provider-aws/lib/lambda-function";
-import { LambdaPermission } from "@cdktf/provider-aws/lib/lambda-permission";
-import { ApiGatewayIntegration } from "@cdktf/provider-aws/lib/api-gateway-integration";
-import { ApiGatewayResource } from "@cdktf/provider-aws/lib/api-gateway-resource";
-import { ApiGatewayMethod } from "@cdktf/provider-aws/lib/api-gateway-method";
-import { S3Object } from "@cdktf/provider-aws/lib/s3-object";
+import { NodejsFunction } from './lib/nodejs-lambda.js'
+import { addVars } from "./modules/vars.js";
+import { LambdaFunctionConfig, lambdaRolePolicy, REGION, STACK_NAME, LAMBDA_TIMEOUT } from "./config.js";
+import { AwsProvider } from "@cdktf/provider-aws/lib/provider/index.js";
+import { S3Bucket } from "@cdktf/provider-aws/lib/s3-bucket/index.js";
+import { ApiGatewayRestApi } from "@cdktf/provider-aws/lib/api-gateway-rest-api/index.js";
+import { ApiGatewayDeployment } from "@cdktf/provider-aws/lib/api-gateway-deployment/index.js";
+import { ApiGatewayStage } from "@cdktf/provider-aws/lib/api-gateway-stage/index.js";
+import { IamRole } from "@cdktf/provider-aws/lib/iam-role/index.js";
+import { IamRolePolicyAttachment } from "@cdktf/provider-aws/lib/iam-role-policy-attachment/index.js";
+import { LambdaFunction } from "@cdktf/provider-aws/lib/lambda-function/index.js";
+import { LambdaPermission } from "@cdktf/provider-aws/lib/lambda-permission/index.js";
+import { ApiGatewayIntegration } from "@cdktf/provider-aws/lib/api-gateway-integration/index.js";
+import { ApiGatewayResource } from "@cdktf/provider-aws/lib/api-gateway-resource/index.js";
+import { ApiGatewayMethod } from "@cdktf/provider-aws/lib/api-gateway-method/index.js";
+import { S3Object } from "@cdktf/provider-aws/lib/s3-object/index.js";
 import { env } from "./env.example.js";
 import { CloudwatchLogGroup } from "@cdktf/provider-aws/lib/cloudwatch-log-group/index.js";
 
@@ -46,8 +45,8 @@ class MyStack extends TerraformStack {
 
     let lambdas = [
       this.addLambda(bucket, api, {
-        name: `${stack}-function`,
-        path: `../../function/dist`,
+        name: `${stack}-lambda-sentry`,
+        path: `../../lambda-sentry/dist`,
         handler: "index.handler",
         runtime: "nodejs18.x",
         version: "v0.0.1"
@@ -61,7 +60,7 @@ class MyStack extends TerraformStack {
         createBeforeDestroy: true,
       },
       triggers: {
-        // Trigger redeployment when lambdas added/removed
+        // Trigger redeployment when lambdas added/removed. This
         redeployment: Lazy.stringValue({
           produce: () => {
             return lambdas.length.toString();
